@@ -11,3 +11,4 @@ usage: getallbills
  -help      print this message
  -m <arg>   bill month in format yyyyMM.  Default:201405
  -p <arg>   port. Default:18081
+
