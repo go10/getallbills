@@ -43,19 +43,6 @@ public class GetAllBills {
         UserObj() {}
     }
 
-    class BillObj {
-        public String total;
-        public String currency;
-        public String groupId;
-        public String userId;
-        public String regionBills;
-        public String billID;
-        public String notes;
-        public String startCal;
-        public String endCal;
-        BillObj() {}
-    }
-    
     
     static ResponseHandler<String> myHandler = new ResponseHandler<String>() {
         @Override
@@ -104,7 +91,6 @@ public class GetAllBills {
 
             // Create output file and write header line.
             File file = new File(outputPath);
-            FileUtils.writeStringToFile(file, "billId,currency,groupId,userId,regionBills,billId,notes,startCal,endCal");
 
             // Get groups
             String sURL = hostport + "/group/list";
@@ -136,26 +122,15 @@ public class GetAllBills {
                             .version(HttpVersion.HTTP_1_1)
                             .execute().handleResponse(myHandler);
                     System.out.println("    " + body);
-                    BillObj[] bills = gson.fromJson(body, BillObj[].class);
-                    if (bills == null) {
-                        continue;
+                    // Write JSON out to file
+                    if (body != null) {
+                        FileUtils.writeStringToFile(file, body, Consts.UTF_8);
                     }
-                    // Write as CSV.
-                    String csv = null;
-                    for (BillObj b : bills) {
-                        csv = b.billID + "," + b.currency + "," + b.groupId
-                                + "," + b.userId + "," + b.regionBills + "," + b.billID
-                                + "," + b.notes + "," + b.startCal + "," + b.endCal;
-                        FileUtils.writeStringToFile(file, csv, Consts.UTF_8);
-                    }
-                   
                 }
             }
             System.out.println("***DONE***");
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
-
 }
